@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import com.google.common.collect.Lists;
-
-
 /**
  * This is an attempt to model the underscore library in Java in as javascripty a way 
  * as I can come up with.
@@ -19,6 +16,9 @@ import com.google.common.collect.Lists;
  *  * Specific method deviations
  *    * include forwards to any
  *    * invoke forwards to each but returns the iterable.
+ *    
+ * open questions:
+ *  * Should I use reflection to make this tool more generic?
  */
 public class _ {
 	public static <T> void each(Iterable<T> iterable, _f<T> f) {
@@ -38,7 +38,7 @@ public class _ {
 	
 	
 	public static <F, T> List<T> map(Iterable<F> iterable, _t<F, T> transform) {
-		List<T> rv = Lists.newArrayList();
+		List<T> rv = new ArrayList<T>();
 		for (F f: iterable) {
 			rv.add(transform.call(f));
 		}
@@ -122,7 +122,7 @@ public class _ {
 	}
 
 	public static <E> List<E> filter(Iterable<E> iterable, final _m<E> _matcher) {
-		final List<E> rv = Lists.newArrayList();
+		final List<E> rv = new ArrayList<E>();
 		_.each(iterable, new _f<E>() {
 
 			public void call(E e) {
@@ -145,7 +145,7 @@ public class _ {
 	}
 
 	public static <E> List<E> reject(Iterable<E> iterable, final _m<E> _matcher) {
-		final List<E> rv = Lists.newArrayList();
+		final List<E> rv = new ArrayList<E>();
 		_.each(iterable, new _f<E>() {
 
 			public void call(E e) {
