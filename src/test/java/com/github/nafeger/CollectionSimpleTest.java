@@ -163,4 +163,26 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		assertEquals("larry", plucked.get(1));
 		assertEquals("curly", plucked.get(2));
 	}
+	
+	@Test
+	public void testMax() {
+		assertEquals(6, (int) _.max(Lists.newArrayList(1, 2, 3, 4, 5, 6)));
+		assertEquals(1, (int) _.max(Lists.newArrayList(1, 2, 3), new _t<Integer, String>() {
+
+			public String call(Integer f) {
+				switch (f) {
+					case 1:
+						return "c";
+					case 2:
+						return "b";
+					case 3:
+						return "a";
+				}
+				return null;
+			}
+
+		}));
+
+	}
+	
 }

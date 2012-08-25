@@ -240,6 +240,38 @@ public class _ {
 		return pluck(Collections.singletonList(map), key);
 	}
 	
+	public static <E extends Comparable<? super E>> E max(Iterable<E> iterable) {
+		E max = null;
+		for (E e: iterable) {
+			if (max == null) {
+				max = e;
+				continue;
+			}
+			if (max.compareTo(e) < 0) {
+				max = e;
+			}
+		}
+		return max;
+	}
+	
+	public static <E, C extends Comparable<? super C>> E max(Iterable<E> iterable, _t<E,C> mapper ) {
+		E eMax = null;
+		C cMax = null;
+		for (E e: iterable) {
+			if (cMax == null) {
+				eMax = e;
+				cMax = mapper.call(e);
+				continue;
+			}
+			C cCache = mapper.call(e);
+			if (cMax.compareTo(cCache) < 0) {
+				cMax = cCache;
+				eMax = e;
+			}
+		}
+		return eMax;
+	}
+	
 	
 	//
 	// Utilities
