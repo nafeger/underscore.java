@@ -2,9 +2,12 @@ package com.github.nafeger;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import com.github.nafeger.support.TransformingComparable;
 
 /**
  * This is an attempt to model the underscore library in Java in as javascripty a way 
@@ -21,6 +24,9 @@ import java.util.Stack;
  *  * Should I use reflection to make this tool more generic?
  */
 public class _ {
+	//
+	// Collections
+	// 
 	public static <T> void each(Iterable<T> iterable, _f<T> f) {
 		for (T t: iterable) {
 			f.call(t);
@@ -304,6 +310,34 @@ public class _ {
 		}
 		return eMax;
 	}
+	
+	/**
+	 * Sort elements by mapper, does not support passing in a property name to sort on.
+	 * @param list
+	 * @param mapper
+	 * @return
+	 */
+	public static <E, C extends Comparable<? super C>> List<E> sortBy(List<E> list, _t<E,C> mapper ) {
+		Collections.sort(list, new TransformingComparable(mapper));
+		return list;
+	}
+	
+	public static <E, INDEX> Map<INDEX, List<E>> groupBy(Iterable<E> list, _t<E,INDEX> mapper ) {
+		Map<INDEX, List<E>> rv = new HashMap<INDEX, List<E>>();
+		for (E e: list) {
+			INDEX i = mapper.call(e);
+			if (rv.get(i) == null) {
+				List<E> tList = new ArrayList<E>();
+				tList.add(e);
+				rv.put(i, tList);
+			} else {
+				rv.get(i).add(e);
+			}
+		}
+		return rv;
+	}
+	
+	
 	
 	//
 	// Utilities

@@ -205,4 +205,42 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		}));
 
 	}
+	
+	@Test
+	public void testSortBy() {
+		List<Integer> rv = _.sortBy(Lists.newArrayList(1, 2, 3, 4, 5, 6), new _t<Integer, Double>() {
+			public Double call(Integer f) {
+				return Math.sin(f);
+			}
+		});
+		
+		assertEquals(6, rv.size());
+		assertEquals(5, (int)rv.get(0));
+		assertEquals(4, (int)rv.get(1));
+		assertEquals(6, (int)rv.get(2));
+		assertEquals(3, (int)rv.get(3));
+		assertEquals(1, (int)rv.get(4));
+		assertEquals(2, (int)rv.get(5));
+	}
+	
+	@Test
+	public void testGroupBy() {
+		List<Double> test = Lists.newArrayList(1.3, 2.1, 2.4);
+		
+		Map<Integer, List<Double>> rv = _.groupBy(test, 
+				new _t<Double, Integer>() {
+
+					public Integer call(Double f) {
+						return (int)Math.floor(f);
+					}
+				}
+			);
+		assertEquals(2, rv.keySet().size());
+		assertEquals(1, rv.get(1).size());
+		assertEquals(1.3d, (double)rv.get(1).get(0), .001);
+		
+		assertEquals(2, rv.get(2).size());
+		assertEquals(2.1d, (double)rv.get(2).get(0), .001);
+		assertEquals(2.4d, (double)rv.get(2).get(1), .001);
+	}
 }
