@@ -55,7 +55,7 @@ public class _ {
 		return map(iterable, transform);
 	}
 	
-	public static <MEMO, E> MEMO reduce(Iterable<E> iterable, MEMO memo, _reducer<MEMO, E> reducer) {
+	public static <MEMO, E> MEMO reduce(Iterable<E> iterable, MEMO memo, _r<MEMO, E> reducer) {
 		for (E e: iterable) {
 			memo = reducer.call(memo, e);
 		}
@@ -64,27 +64,27 @@ public class _ {
 	
 	/**
 	 * 
-	 * Alias to {@link _#reduce(Iterable, Object, _reducer)}
+	 * Alias to {@link _#reduce(Iterable, Object, _r)}
 	 * @param iterable
 	 * @param memo
 	 * @param reducer
 	 * @return
 	 */
-	public static <MEMO, E> MEMO inject(Iterable<E> iterable, MEMO memo, _reducer<MEMO, E> reducer) {
+	public static <MEMO, E> MEMO inject(Iterable<E> iterable, MEMO memo, _r<MEMO, E> reducer) {
 		return reduce(iterable, memo, reducer);
 	}
 	/**
-	 * Alias to {@link _#reduce(Iterable, Object, _reducer)}
+	 * Alias to {@link _#reduce(Iterable, Object, _r)}
 	 * @param iterable
 	 * @param memo
 	 * @param reducer
 	 * @return
 	 */
-	public static <MEMO, E> MEMO foldl(Iterable<E> iterable, MEMO memo, _reducer<MEMO, E> reducer) {
+	public static <MEMO, E> MEMO foldl(Iterable<E> iterable, MEMO memo, _r<MEMO, E> reducer) {
 		return reduce(iterable, memo, reducer);
 	}
 	
-	public static <MEMO, E> MEMO reduceRight(Iterable<E> iterable, MEMO memo, _reducer<MEMO, E> reducer) {
+	public static <MEMO, E> MEMO reduceRight(Iterable<E> iterable, MEMO memo, _r<MEMO, E> reducer) {
 		Stack<E> stack = new Stack<E>(); // lame
 		for (E e: iterable) { 
 			stack.push(e);
@@ -272,6 +272,38 @@ public class _ {
 		return eMax;
 	}
 	
+	// todo these two methods should depend in some way on max.
+	public static <E extends Comparable<? super E>> E min(Iterable<E> iterable) {
+		E max = null;
+		for (E e: iterable) {
+			if (max == null) {
+				max = e;
+				continue;
+			}
+			if (max.compareTo(e) > 0) {
+				max = e;
+			}
+		}
+		return max;
+	}
+	
+	public static <E, C extends Comparable<? super C>> E min(Iterable<E> iterable, _t<E,C> mapper ) {
+		E eMax = null;
+		C cMax = null;
+		for (E e: iterable) {
+			if (cMax == null) {
+				eMax = e;
+				cMax = mapper.call(e);
+				continue;
+			}
+			C cCache = mapper.call(e);
+			if (cMax.compareTo(cCache) > 0) {
+				cMax = cCache;
+				eMax = e;
+			}
+		}
+		return eMax;
+	}
 	
 	//
 	// Utilities
@@ -289,7 +321,7 @@ public class _ {
 	}
 	
 	private static _m<Object> identity = new _m<Object>() {
-		public boolean call(Object e) {
+		public Boolean call(Object e) {
 			return true;
 		}
 	};

@@ -48,14 +48,14 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 
 	@Test
 	public void testSimpleReduce() {
-		int rv = _.reduce(Lists.newArrayList(1,2,3), 0 , new _reducer<Integer, Integer>() {
+		int rv = _.reduce(Lists.newArrayList(1,2,3), 0 , new _r<Integer, Integer>() {
 			public Integer call(Integer memo, Integer f) {
 				return memo + f;
 			}
 		});
 		assertEquals(6, rv);
 		
-		rv = _.reduce(Lists.newArrayList(1,2,3), 10 , new _reducer<Integer, Integer>() {
+		rv = _.reduce(Lists.newArrayList(1,2,3), 10 , new _r<Integer, Integer>() {
 			public Integer call(Integer memo, Integer f) {
 				return memo + f;
 			}
@@ -72,7 +72,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		
 		
 		List<int[]> list = Lists.newArrayList(new int[]{0, 1}, new int[]{2, 3}, new int[]{4, 5});
-		String flat = _.reduceRight(list, "", new _reducer<String, int[]>() {
+		String flat = _.reduceRight(list, "", new _r<String, int[]>() {
 
 			public String call(String m, int[] f) {
 				for (int e: f) {
@@ -90,7 +90,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	public void testFind() {
 		
 		int rv = _.find(Lists.newArrayList(1,2,3), new _m<Integer>() {
-			public boolean call(Integer e) {
+			public Boolean call(Integer e) {
 				return e % 2 == 0;
 			}
 		});
@@ -101,7 +101,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	public void testFilter() {
 		
 		List<Integer> rv = _.filter(Lists.newArrayList(1,2,3,4,5,6), new _m<Integer>() {
-			public boolean call(Integer e) {
+			public Boolean call(Integer e) {
 				return e % 2 == 0;
 			}
 		});
@@ -115,7 +115,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	public void testReject() {
 		
 		List<Integer> rv = _.reject(Lists.newArrayList(1,2,3,4,5,6), new _m<Integer>() {
-			public boolean call(Integer e) {
+			public Boolean call(Integer e) {
 				return e % 2 == 0;
 			}
 		});
@@ -133,13 +133,13 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	@Test
 	public void testAny() {
 		assertTrue(_.any(Lists.newArrayList(1,2,3,4,5,6), new _m<Integer>() {
-			public boolean call(Integer e) {
+			public Boolean call(Integer e) {
 				return e % 2 == 0;
 			}
 		}));
 		
 		assertFalse(_.any(Lists.newArrayList(1,3,5), new _m<Integer>() {
-			public boolean call(Integer e) {
+			public Boolean call(Integer e) {
 				return e % 2 == 0;
 			}
 		}));
@@ -185,4 +185,24 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 
 	}
 	
+	@Test
+	public void testMin() {
+		assertEquals(1, (int) _.min(Lists.newArrayList(1, 2, 3, 4, 5, 6)));
+		assertEquals(3, (int) _.min(Lists.newArrayList(1, 2, 3), new _t<Integer, String>() {
+
+			public String call(Integer f) {
+				switch (f) {
+					case 1:
+						return "c";
+					case 2:
+						return "b";
+					case 3:
+						return "a";
+				}
+				return null;
+			}
+
+		}));
+
+	}
 }

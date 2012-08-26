@@ -1,6 +1,10 @@
 package com.github.nafeger;
 
 
-public interface _m<E> {
-	boolean call(E e);
+/**
+ * Matcher: this takes an element and returns true
+ * if it matches.
+ */
+public interface _m<E> extends _t<E, Boolean> {
+	Boolean call(E e);
 }
