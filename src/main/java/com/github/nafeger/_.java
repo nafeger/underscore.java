@@ -1,6 +1,8 @@
 package com.github.nafeger;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -337,7 +339,68 @@ public class _ {
 		return rv;
 	}
 	
+	public static <C extends Comparable<? super C>> int sortedIndex(List<C> list, C c) {
+		int idx = 0;
+		for (int i = 0; i < list.size(); i++) {
+			int compareTo = list.get(i).compareTo(c);
+			if (compareTo < 0) {
+				idx = compareTo > 0 ? i : i+1;
+				continue;
+			}
+			break;
+		}
+		return idx;
+	}
 	
+	/**
+	 * Shuffle, delegates to collections.shuffle.
+	 * @param list
+	 * @return
+	 */
+	public static <E> List<E> shuffle(List<E> list) {
+		Collections.shuffle(list);
+		return list;
+	}
+	
+	/**
+	 * 
+	 * @param iterable
+	 * @param clazz sadly i need to know the type of this collection, or else the world will end.
+	 * @return
+	 */
+	public static <E> E[] toArray(Iterable<E> iterable, Class<E> clazz) {
+		Collection<E> collection = null;
+		if (iterable instanceof Collection) {
+			collection = (Collection<E>)iterable;
+		} else {
+			List<E> rv = new ArrayList<E>();
+			for (E e: iterable) {
+				rv.add(e);
+			}
+		}
+		
+		if (collection.size() == 0) {
+			Array.newInstance(clazz, 0);
+		}
+		return collection.toArray((E[])Array.newInstance(clazz, collection.size()));
+	}
+	
+	public static <E> int size(Iterable<E> iterable) {
+		if (iterable == null) {
+			return 0;
+		}
+		Collection<E> collection = null;
+		if (iterable instanceof Collection) {
+			collection = (Collection<E>)iterable;
+		} else {
+			List<E> rv = new ArrayList<E>();
+			for (E e: iterable) {
+				rv.add(e);
+			}
+		}
+		
+		return collection.size();
+	}
 	
 	//
 	// Utilities

@@ -243,4 +243,29 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		assertEquals(2.1d, (double)rv.get(2).get(0), .001);
 		assertEquals(2.4d, (double)rv.get(2).get(1), .001);
 	}
+	
+	@Test
+	public void testSortedIndex() {
+		
+		assertEquals(0, _.sortedIndex(Lists.newArrayList(10, 20, 30, 40, 50, 60), 0));
+		assertEquals(3, _.sortedIndex(Lists.newArrayList(10, 20, 30, 40, 50, 60), 35));
+		assertEquals(6, _.sortedIndex(Lists.newArrayList(10, 20, 30, 40, 50, 60), 100));
+		assertEquals(2, _.sortedIndex(Lists.newArrayList(10, 20, 30, 40, 50, 60), 30));
+	}
+	
+	@Test
+	public void testToArray() {
+		Integer[] intarr = _.toArray(Lists.newArrayList(10, 20, 30), Integer.class);
+		assertEquals(3, intarr.length);
+		assertEquals(10, (int)intarr[0]);
+		assertEquals(20, (int)intarr[1]);
+		assertEquals(30, (int)intarr[2]);
+	}
+	
+	@Test
+	public void testSize() {
+		assertEquals(3, _.size(Lists.newArrayList(10, 20, 30)));
+		assertEquals(0, _.size(Lists.newArrayList()));
+		assertEquals(0, _.size(null));
+	}
 }
