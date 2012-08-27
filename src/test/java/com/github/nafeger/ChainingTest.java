@@ -1,7 +1,6 @@
 package com.github.nafeger;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.intThat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,8 +48,6 @@ public class ChainingTest {
 		assertEquals(6, lines.get(2).length);
 		assertEquals(9, lines.get(3).length);
 		
-		
-		
 		List<String> allLines = _.chain(lyrics)
 		.map(new _t<Lyric, String[]>() {
 			public String[] call(Lyric f) {
@@ -75,14 +72,14 @@ public class ChainingTest {
 
 	@Test
 	public void testLyrics() {
-		 ;
-		 Map<String, Integer> counter = _.chain(lyrics)
+		Map<String, Integer> counter = _.chain(lyrics)
 		.map(new _t<Lyric, String[]>() {
 			public String[] call(Lyric f) {
 				return f.getWords().split(" ");
 			}
-		}).flatten(String.class)
-          .reduce(Maps.<String, Integer>newHashMap(), new _r<Map<String, Integer>, String>() {
+		})
+		.flatten(String.class)
+		.reduce(Maps.<String, Integer> newHashMap(), new _r<Map<String, Integer>, String>() {
 
 			public Map<String, Integer> call(Map<String, Integer> m, String e) {
 				Integer count = m.get(e);
@@ -92,11 +89,11 @@ public class ChainingTest {
 				m.put(e, count + 1);
 				return m;
 			}
-          });
+		});
 		assertEquals(17, counter.size());
-		assertEquals(2, (int)counter.get("lumberjack"));
-		assertEquals(4, (int)counter.get("all"));
-		
+		assertEquals(2, (int) counter.get("lumberjack"));
+		assertEquals(4, (int) counter.get("all"));
+
 	}
 
 	private static class Lyric {
