@@ -89,7 +89,7 @@ public class Chain<E> {
 		return this;
 	}
 
-	public Chain<E> flatten() {
-		return null;
+	public <F> Chain<F> flatten(Class<F> clazz) {
+		return new Chain<F>(_.flatten(this.list, clazz));
 	}
 }

@@ -48,6 +48,25 @@ public class ChainingTest {
 		
 		
 		
+		List<String> allLines = _.chain(lyrics)
+		.map(new _t<Lyric, String[]>() {
+			public String[] call(Lyric f) {
+				return f.getWords().split(" ");
+			}
+		}).flatten(String.class).value();
+		assertEquals(30, allLines.size());
+		assertEquals("I'm", allLines.get(0));
+		assertEquals("day", allLines.get(29));
+		
+		List<String> allLinesThroughList = _.chain(lyrics)
+		.map(new _t<Lyric, List<String>>() {
+			public List<String> call(Lyric f) {
+				return Arrays.asList(f.getWords().split(" "));
+			}
+		}).flatten(String.class).value();
+		assertEquals(30, allLinesThroughList .size());
+		assertEquals("I'm", allLinesThroughList .get(0));
+		assertEquals("day", allLinesThroughList .get(29));
 		//.flatten().value();
 	}
 	/*

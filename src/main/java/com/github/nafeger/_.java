@@ -2,6 +2,7 @@ package com.github.nafeger;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,6 +70,60 @@ public class _ {
 			memo = reducer.call(memo, e);
 		}
 		return memo;
+	}
+	
+	/**
+	 * 
+	 * @param structure This needs to eventually reduce down to an Iterable<E>, so if it is a List<List<E>> that's fine.
+	 * or even List<E[]> should work too.
+	 * @param clazz
+	 * @param shallow false doesn't really work well in the java world
+	 * @return
+	 */
+	@SuppressWarnings("unchecked") //  we enter a dark generics place here.
+	public static <E> List<E> flatten(Iterable structure, final Class<E> clazz, final boolean shallow) {
+		List<E> rv = new ArrayList<E>();
+		
+		reduce(structure, rv, new _r<List<E>, E>() {
+			public List<E> call(List<E> m, E e) {
+				if (e.getClass().isAssignableFrom(clazz)) {
+					m.add(e);
+				}
+				if (e instanceof Collection) {
+					if (shallow) {
+						m.addAll((Collection)e);
+					} else {
+						m.addAll(flatten((Collection<E>)e, clazz, shallow));
+					}
+				}
+				else if (e instanceof Iterable) {
+					if (shallow) {
+						for(E element: (Iterable<E>)e) {
+							m.add(element);
+						}
+					} else {
+						m.addAll(flatten((Iterable<E>)e, clazz, shallow));
+					}
+				}
+				else if (e.getClass().isArray()) {
+					if (shallow) {
+						for(E element: (E[])e) {
+							m.add(element);
+						}
+					} else {
+						m.addAll(flatten(Arrays.asList((E[])e), clazz, shallow));
+					}
+				}
+				
+				return m;
+			}
+			 
+		});
+		return rv;
+	}
+	
+	public static <E> List<E> flatten(Iterable structure, Class<E> clazz) {
+		return flatten(structure, clazz, false);
 	}
 	
 	/**
