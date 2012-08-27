@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import com.github.nafeger.support.Chain;
 import com.github.nafeger.support.TransformingComparable;
 
 /**
@@ -438,5 +439,12 @@ public class _ {
 			return f;
 		}
 	};
+	
+	//
+	// CHAINING 
+	//
+	public static <E> Chain<E> chain(Iterable<E> iterable) {
+		return new Chain<E>(iterable);
+	}
 
 }
