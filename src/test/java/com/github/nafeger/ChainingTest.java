@@ -1,14 +1,17 @@
 package com.github.nafeger;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.intThat;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class ChainingTest {
 
@@ -69,40 +72,32 @@ public class ChainingTest {
 		assertEquals("day", allLinesThroughList .get(29));
 		//.flatten().value();
 	}
-	/*
+
 	@Test
 	public void testLyrics() {
-		List<Lyric> lyrics = Lists.newArrayList(
-		              new Lyric(1, "I'm a lumberjack and I'm okay"),
-		              new Lyric(2, "I sleep all night and I work all day"),
-		              new Lyric(3, "He's a lumberjack and he's okay"),
-		              new Lyric(4, "He sleeps all night and he works all day"));
-
-        _.chain(lyrics)
-          .map(new _f<Lyric, String[]>() {
-        	  public String[] call(Lyric l) {
-        		  return l.getWords().split(" ");
-        	  }
-        	  //, (line) { return line.words.split(' '); })
-          })
-          .flatten()
-          .reduce(new _r<Integer, String>() {
-
-			public Integer call(Integer m, String e) {
-				return null;
+		 ;
+		 Map<String, Integer> counter = _.chain(lyrics)
+		.map(new _t<Lyric, String[]>() {
+			public String[] call(Lyric f) {
+				return f.getWords().split(" ");
 			}
-        	  
-          })
-          //.reduce(function(counts, word) {
-            //counts[word] = (counts[word] || 0) + 1;
-            //return counts;
-        //}, {})
-        .firstValue();
+		}).flatten(String.class)
+          .reduce(Maps.<String, Integer>newHashMap(), new _r<Map<String, Integer>, String>() {
 
-        => {lumberjack : 2, all : 4, night : 2 ... }
+			public Map<String, Integer> call(Map<String, Integer> m, String e) {
+				Integer count = m.get(e);
+				if (count == null) {
+					count = 0;
+				}
+				m.put(e, count + 1);
+				return m;
+			}
+          });
+		assertEquals(17, counter.size());
+		assertEquals(2, (int)counter.get("lumberjack"));
+		assertEquals(4, (int)counter.get("all"));
 		
 	}
-	*/
 
 	private static class Lyric {
 		private int line;

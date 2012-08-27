@@ -59,16 +59,19 @@ public class Chain<E> {
 	public <T> Chain<T> collect(_t<E, T> transform) {
 		return this.map(transform);
 	}
+	/**
+	 * For now reduce crashes the chaining, since Chain needs an Iterable to work on.
+	 */
+	public <MEMO> MEMO reduce(MEMO memo, _r<MEMO, E> reducer) {
+		return _.reduce(this.list, memo, reducer);
+	}
+	public <MEMO> MEMO inject(MEMO memo, _r<MEMO, E> reducer) {
+		return this.reduce(memo, reducer);
+	}
+	public <MEMO> MEMO foldl(MEMO memo, _r<MEMO, E> reducer) {
+		return this.reduce(memo, reducer);
+	}
 	/*
-	public <MEMO, E> MEMO reduce(MEMO memo, _r<MEMO, E> reducer) {
-		_.reduce(this.list, memo, reducer);
-	}
-	public <MEMO, E> MEMO inject(MEMO memo, _r<MEMO, E> reducer) {
-		reduce();
-	}
-	public <MEMO, E> MEMO foldl(MEMO memo, _r<MEMO, E> reducer) {
-		reduce();
-	}
 
 	public <MEMO, E> MEMO reduceRight(MEMO memo, _r<MEMO, E> reducer) {
 	}
