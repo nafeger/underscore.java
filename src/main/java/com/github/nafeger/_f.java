@@ -6,5 +6,5 @@ package com.github.nafeger;
  * per element of the iterable.
  */
 public interface _f<E> {
-	void call(E e);
+	void call(E e, int index, Iterable<E> list);
 }

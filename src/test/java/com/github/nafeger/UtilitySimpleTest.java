@@ -9,7 +9,7 @@ public class UtilitySimpleTest {
 
 	@Test
 	public void testIdentity() {
-		assertEquals(12, (int)_.identityTransformer(Integer.class).call(12));
+		assertEquals(12, (int)_.identityTransformer(Integer.class).call(12, 1, null));
 	}
 
 }

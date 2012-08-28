@@ -19,7 +19,7 @@ public class ChainingTest {
 		List<Integer> rv = _.chain(Lists.newArrayList(1, 2, 3)).map(
 				new _t<Integer, Integer>(){
 
-					public Integer call(Integer f) {
+					public Integer call(Integer f, int index, Iterable<Integer> list) {
 						return f*2;
 					}}).value();
 		assertEquals(3, rv.size());
@@ -38,7 +38,7 @@ public class ChainingTest {
 		
 		List<String[]> lines = _.chain(lyrics)
 		.map(new _t<Lyric, String[]>() {
-			public String[] call(Lyric f) {
+			public String[] call(Lyric f, int index, Iterable<Lyric> list) {
 				return f.getWords().split(" ");
 			}
 		}).value();
@@ -50,7 +50,7 @@ public class ChainingTest {
 		
 		List<String> allLines = _.chain(lyrics)
 		.map(new _t<Lyric, String[]>() {
-			public String[] call(Lyric f) {
+			public String[] call(Lyric f, int index, Iterable<Lyric> list) {
 				return f.getWords().split(" ");
 			}
 		}).flatten(String.class).value();
@@ -60,7 +60,7 @@ public class ChainingTest {
 		
 		List<String> allLinesThroughList = _.chain(lyrics)
 		.map(new _t<Lyric, List<String>>() {
-			public List<String> call(Lyric f) {
+			public List<String> call(Lyric f, int index, Iterable<Lyric> list) {
 				return Arrays.asList(f.getWords().split(" "));
 			}
 		}).flatten(String.class).value();
@@ -74,7 +74,7 @@ public class ChainingTest {
 	public void testLyrics() {
 		Map<String, Integer> counter = _.chain(lyrics)
 		.map(new _t<Lyric, String[]>() {
-			public String[] call(Lyric f) {
+			public String[] call(Lyric f, int index, Iterable<Lyric> list) {
 				return f.getWords().split(" ");
 			}
 		})

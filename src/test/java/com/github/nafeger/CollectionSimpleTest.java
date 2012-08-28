@@ -25,7 +25,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		Runnable three = mock(Runnable.class);
 		ArrayList<Runnable> list = Lists.newArrayList(one, two, three);
 		_.each(list,new _f<Runnable>() {
-			public void call(Runnable f) {
+			public void call(Runnable f, int index, Iterable<Runnable> list) {
 				f.run();
 			}
 		});
@@ -37,7 +37,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	@Test
 	public void testSimpleMap() {
 		List<Integer> rv = _.map(Lists.newArrayList(1,2,3), new _t<Integer, Integer>() {
-			public Integer call(Integer f) {
+			public Integer call(Integer f, int index, Iterable<Integer> list) {
 				return f*2;
 			}
 		});
@@ -90,7 +90,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	public void testFind() {
 		
 		int rv = _.find(Lists.newArrayList(1,2,3), new _m<Integer>() {
-			public Boolean call(Integer e) {
+			public Boolean call(Integer e, int index, Iterable<Integer> list) {
 				return e % 2 == 0;
 			}
 		});
@@ -101,7 +101,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	public void testFilter() {
 		
 		List<Integer> rv = _.filter(Lists.newArrayList(1,2,3,4,5,6), new _m<Integer>() {
-			public Boolean call(Integer e) {
+			public Boolean call(Integer e, int index, Iterable<Integer> list) {
 				return e % 2 == 0;
 			}
 		});
@@ -115,7 +115,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	public void testReject() {
 		
 		List<Integer> rv = _.reject(Lists.newArrayList(1,2,3,4,5,6), new _m<Integer>() {
-			public Boolean call(Integer e) {
+			public Boolean call(Integer e, int index, Iterable<Integer> list) {
 				return e % 2 == 0;
 			}
 		});
@@ -133,13 +133,13 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	@Test
 	public void testAny() {
 		assertTrue(_.any(Lists.newArrayList(1,2,3,4,5,6), new _m<Integer>() {
-			public Boolean call(Integer e) {
+			public Boolean call(Integer e, int index, Iterable<Integer> list) {
 				return e % 2 == 0;
 			}
 		}));
 		
 		assertFalse(_.any(Lists.newArrayList(1,3,5), new _m<Integer>() {
-			public Boolean call(Integer e) {
+			public Boolean call(Integer e, int index, Iterable<Integer> list) {
 				return e % 2 == 0;
 			}
 		}));
@@ -169,7 +169,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		assertEquals(6, (int) _.max(Lists.newArrayList(1, 2, 3, 4, 5, 6)));
 		assertEquals(1, (int) _.max(Lists.newArrayList(1, 2, 3), new _t<Integer, String>() {
 
-			public String call(Integer f) {
+			public String call(Integer f, int index, Iterable<Integer> list) {
 				switch (f) {
 					case 1:
 						return "c";
@@ -190,7 +190,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		assertEquals(1, (int) _.min(Lists.newArrayList(1, 2, 3, 4, 5, 6)));
 		assertEquals(3, (int) _.min(Lists.newArrayList(1, 2, 3), new _t<Integer, String>() {
 
-			public String call(Integer f) {
+			public String call(Integer f, int index, Iterable<Integer> list) {
 				switch (f) {
 					case 1:
 						return "c";
@@ -209,7 +209,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 	@Test
 	public void testSortBy() {
 		List<Integer> rv = _.sortBy(Lists.newArrayList(1, 2, 3, 4, 5, 6), new _t<Integer, Double>() {
-			public Double call(Integer f) {
+			public Double call(Integer f, int index, Iterable<Integer> list) {
 				return Math.sin(f);
 			}
 		});
@@ -230,7 +230,7 @@ public class CollectionSimpleTest extends AbstractMockitoTest {
 		Map<Integer, List<Double>> rv = _.groupBy(test, 
 				new _t<Double, Integer>() {
 
-					public Integer call(Double f) {
+					public Integer call(Double f, int index, Iterable<Double> list) {
 						return (int)Math.floor(f);
 					}
 				}

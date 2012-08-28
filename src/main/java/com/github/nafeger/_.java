@@ -31,9 +31,10 @@ public class _ {
 	//
 	// Collections
 	// 
-	public static <T> void each(Iterable<T> iterable, _f<T> f) {
-		for (T t: iterable) {
-			f.call(t);
+	public static <E> void each(Iterable<E> iterable, _f<E> f) {
+		int idx = 0;
+		for (E t: iterable) {
+			f.call(t, idx++, iterable);
 		}
 	}
 	
@@ -42,15 +43,17 @@ public class _ {
 	 * @param iterable
 	 * @param f
 	 */
-	public static <T> void forEach(Iterable<T> iterable, _f<T> f) {
+	public static <E> void forEach(Iterable<E> iterable, _f<E> f) {
 		each(iterable, f);
 	}
 	
 	
 	public static <F, T> List<T> map(Iterable<F> iterable, _t<F, T> transform) {
 		List<T> rv = new ArrayList<T>();
+		int idx = -1;
 		for (F f: iterable) {
-			rv.add(transform.call(f));
+			idx++;
+			rv.add(transform.call(f, idx, iterable));
 		}
 		return rv;
 	}
@@ -162,8 +165,8 @@ public class _ {
 	public static <E> E find(Iterable<E> iterable, final _m<E> _matcher) {
 		try {
 			_.each(iterable, new _f<E>() {
-				public void call(E e) {
-					if (_matcher.call(e)) {
+				public void call(E e, int index, Iterable<E> list) {
+					if (_matcher.call(e, index, list)) {
 						throw new FoundException(e);
 					}
 				}
@@ -189,8 +192,8 @@ public class _ {
 		final List<E> rv = new ArrayList<E>();
 		_.each(iterable, new _f<E>() {
 
-			public void call(E e) {
-				if (_matcher.call(e)) {
+			public void call(E e, int index, Iterable<E> list) {
+				if (_matcher.call(e, index, list)) {
 					rv.add(e);
 				}
 			}
@@ -212,8 +215,8 @@ public class _ {
 		final List<E> rv = new ArrayList<E>();
 		_.each(iterable, new _f<E>() {
 
-			public void call(E e) {
-				if (!_matcher.call(e)) {
+			public void call(E e, int index, Iterable<E> list) {
+				if (!_matcher.call(e, index, list)) {
 					rv.add(e);
 				}
 			}
@@ -223,8 +226,10 @@ public class _ {
 	
 
 	public static <E> boolean all(Iterable<E> iterable, _m<E> matcher) {
+		int idx = -1;
 		for(E e: iterable) {
-			if (!matcher.call(e)) {
+			idx++;
+			if (!matcher.call(e, idx, iterable)) {
 				return false;
 			}
 		}
@@ -242,8 +247,10 @@ public class _ {
 	}
 	
 	public static <E> boolean any(Iterable<E> iterable, _m<E> matcher) {
+		int idx = -1;
 		for(E e: iterable) {
-			if (matcher.call(e)) {
+			idx++;
+			if (matcher.call(e, idx, iterable)) {
 				return true;
 			}
 		}
@@ -321,13 +328,15 @@ public class _ {
 	public static <E, C extends Comparable<? super C>> E max(Iterable<E> iterable, _t<E,C> mapper ) {
 		E eMax = null;
 		C cMax = null;
+		int idx = -1;
 		for (E e: iterable) {
+			idx++;
 			if (cMax == null) {
 				eMax = e;
-				cMax = mapper.call(e);
+				cMax = mapper.call(e, idx, iterable);
 				continue;
 			}
-			C cCache = mapper.call(e);
+			C cCache = mapper.call(e, idx, iterable);
 			if (cMax.compareTo(cCache) < 0) {
 				cMax = cCache;
 				eMax = e;
@@ -354,13 +363,15 @@ public class _ {
 	public static <E, C extends Comparable<? super C>> E min(Iterable<E> iterable, _t<E,C> mapper ) {
 		E eMax = null;
 		C cMax = null;
+		int idx = -1;
 		for (E e: iterable) {
+			idx++;
 			if (cMax == null) {
 				eMax = e;
-				cMax = mapper.call(e);
+				cMax = mapper.call(e, idx, iterable);
 				continue;
 			}
-			C cCache = mapper.call(e);
+			C cCache = mapper.call(e, idx, iterable);
 			if (cMax.compareTo(cCache) > 0) {
 				cMax = cCache;
 				eMax = e;
@@ -372,7 +383,7 @@ public class _ {
 	/**
 	 * Sort elements by mapper, does not support passing in a property name to sort on.
 	 * @param list
-	 * @param mapper
+	 * @param mapper Note: mapper cannot depend on index or iterable, they will be meaningless in this method, as the order they are called in sort is not garaunteed.
 	 * @return
 	 */
 	public static <E, C extends Comparable<? super C>> List<E> sortBy(List<E> list, _t<E,C> mapper ) {
@@ -382,8 +393,10 @@ public class _ {
 	
 	public static <E, INDEX> Map<INDEX, List<E>> groupBy(Iterable<E> list, _t<E,INDEX> mapper ) {
 		Map<INDEX, List<E>> rv = new HashMap<INDEX, List<E>>();
+		int idx = -1;
 		for (E e: list) {
-			INDEX i = mapper.call(e);
+			idx++;
+			INDEX i = mapper.call(e, idx, list);
 			if (rv.get(i) == null) {
 				List<E> tList = new ArrayList<E>();
 				tList.add(e);
@@ -474,7 +487,7 @@ public class _ {
 	}
 	
 	private static _m<Object> identity = new _m<Object>() {
-		public Boolean call(Object e) {
+		public Boolean call(Object e, int index, Iterable<Object> list) {
 			return true;
 		}
 	};
@@ -490,7 +503,7 @@ public class _ {
 	}
 	
 	private static _t<Object,Object> identityTransformer = new _t<Object,Object>() {
-		public Object call(Object f) {
+		public Object call(Object f, int index, Iterable<Object> list) {
 			return f;
 		}
 	};

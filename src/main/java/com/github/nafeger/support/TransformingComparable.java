@@ -19,7 +19,7 @@ public class TransformingComparable<E, C extends Comparable<? super C>> implemen
 	}
 
 	public int compare(E o1, E o2) {
-		return this.mapper.call(o1).compareTo(this.mapper.call(o2));
+		return this.mapper.call(o1, 0, null).compareTo(this.mapper.call(o2, 0, null));
 	}
 
 }
